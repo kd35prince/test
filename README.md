@@ -254,3 +254,233 @@ export default function App() {
     </View>
   );
 }
+
+app.json
+
+{
+  "name": "AnimatableExplorer",
+  "displayName": "AnimatableExplorer"
+}
+
+react-native-animatable.d.ts
+
+export type Animation =
+  | 'bounce'
+  | 'flash'
+  | 'jello'
+  | 'pulse'
+  | 'rotate'
+  | 'rubberBand'
+  | 'shake'
+  | 'swing'
+  | 'tada'
+  | 'wobble'
+  | 'bounceIn'
+  | 'bounceInDown'
+  | 'bounceInUp'
+  | 'bounceInLeft'
+  | 'bounceInRight'
+  | 'bounceOut'
+  | 'bounceOutDown'
+  | 'bounceOutUp'
+  | 'bounceOutLeft'
+  | 'bounceOutRight'
+  | 'fadeIn'
+  | 'fadeInDown'
+  | 'fadeInDownBig'
+  | 'fadeInUp'
+  | 'fadeInUpBig'
+  | 'fadeInLeft'
+  | 'fadeInLeftBig'
+  | 'fadeInRight'
+  | 'fadeInRightBig'
+  | 'fadeOut'
+  | 'fadeOutDown'
+  | 'fadeOutDownBig'
+  | 'fadeOutUp'
+  | 'fadeOutUpBig'
+  | 'fadeOutLeft'
+  | 'fadeOutLeftBig'
+  | 'fadeOutRight'
+  | 'fadeOutRightBig'
+  | 'flipInX'
+  | 'flipInY'
+  | 'flipOutX'
+  | 'flipOutY'
+  | 'lightSpeedIn'
+  | 'lightSpeedOut'
+  | 'slideInDown'
+  | 'slideInUp'
+  | 'slideInLeft'
+  | 'slideInRight'
+  | 'slideOutDown'
+  | 'slideOutUp'
+  | 'slideOutLeft'
+  | 'slideOutRight'
+  | 'zoomIn'
+  | 'zoomInDown'
+  | 'zoomInUp'
+  | 'zoomInLeft'
+  | 'zoomInRight'
+  | 'zoomOut'
+  | 'zoomOutDown'
+  | 'zoomOutUp'
+  | 'zoomOutLeft'
+  | 'zoomOutRight';
+
+groupedAnimationTypes.ts
+
+import {Animation} from 'react-native-animatable';
+
+interface GroupedAnimationType {
+  title: string;
+  data: Animation[];
+}
+export const animationTypes: GroupedAnimationType[] = [
+  {
+    title: 'Attention Seekers',
+    data: [
+      'bounce',
+      'flash',
+      'jello',
+      'pulse',
+      'rotate',
+      'rubberBand',
+      'shake',
+      'swing',
+      'tada',
+      'wobble',
+    ],
+  },
+  {
+    title: 'Bouncing Entrances',
+    data: [
+      'bounceIn',
+      'bounceInDown',
+      'bounceInUp',
+      'bounceInLeft',
+      'bounceInRight',
+    ],
+  },
+  {
+    title: 'Bouncing Exits',
+    data: [
+      'bounceOut',
+      'bounceOutDown',
+      'bounceOutUp',
+      'bounceOutLeft',
+      'bounceOutRight',
+    ],
+  },
+  {
+    title: 'Fading Entrances',
+    data: [
+      'fadeIn',
+      'fadeInDown',
+      'fadeInDownBig',
+      'fadeInUp',
+      'fadeInUpBig',
+      'fadeInLeft',
+      'fadeInLeftBig',
+      'fadeInRight',
+      'fadeInRightBig',
+    ],
+  },
+  {
+    title: 'Fading Exits',
+    data: [
+      'fadeOut',
+      'fadeOutDown',
+      'fadeOutDownBig',
+      'fadeOutUp',
+      'fadeOutUpBig',
+      'fadeOutLeft',
+      'fadeOutLeftBig',
+      'fadeOutRight',
+      'fadeOutRightBig',
+    ],
+  },
+  {
+    title: 'Flippers',
+    data: ['flipInX', 'flipInY', 'flipOutX', 'flipOutY'],
+  },
+  {
+    title: 'Lightspeed',
+    data: ['lightSpeedIn', 'lightSpeedOut'],
+  },
+  {
+    title: 'Sliding Entrances',
+    data: ['slideInDown', 'slideInUp', 'slideInLeft', 'slideInRight'],
+  },
+  {
+    title: 'Sliding Exits',
+    data: ['slideOutDown', 'slideOutUp', 'slideOutLeft', 'slideOutRight'],
+  },
+  {
+    title: 'Zooming Entrances',
+    data: ['zoomIn', 'zoomInDown', 'zoomInUp', 'zoomInLeft', 'zoomInRight'],
+  },
+  {
+    title: 'Zooming Exits',
+    data: [
+      'zoomOut',
+      'zoomOutDown',
+      'zoomOutUp',
+      'zoomOutLeft',
+      'zoomOutRight',
+    ],
+  },
+];
+
+AnimationCell.tsx
+
+import React, {memo, useCallback, useRef} from 'react';
+import {StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
+import {Animation, View} from 'react-native-animatable';
+
+const styles = StyleSheet.create({
+  cell: {
+    padding: 16,
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  name: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+});
+
+interface AnimationCellProps {
+  animationType: Animation;
+  color: string;
+  onPress: (view: View, animationType: Animation) => void;
+  useNativeDriver: boolean;
+}
+
+export default memo(function AnimationCell({
+  useNativeDriver,
+  color,
+  onPress,
+  animationType,
+}: AnimationCellProps) {
+  const ref = useRef<View>(null);
+  const handlePress = useCallback(() => {
+    if (ref.current && onPress) {
+      onPress(ref.current, animationType);
+    }
+  }, [ref, onPress, animationType]);
+
+  return (
+    <TouchableWithoutFeedback onPress={handlePress}>
+      <View
+        ref={ref}
+        style={[{backgroundColor: color}, styles.cell]}
+        useNativeDriver={useNativeDriver}>
+        <Text style={styles.name}>{animationType}</Text>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+});
+
+
